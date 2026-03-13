@@ -1,0 +1,57 @@
+Practical No. 5: Configuring a Zone-Based Policy Firewall
+Aim: 
+Configuring a Zone-Based Policy Firewall (ZPF)
+
+steps:
+
+Step 1: Verify Connectivity
+
+Open Cisco Packet Tracer.
+
+Configure IP addresses on PCs and router interfaces.
+
+Test connectivity using ping.
+
+PC> ping 192.168.1.1
+
+Step 2: Create Security Zones
+
+Router> enable
+Router# configure terminal
+Router(config)# zone security INSIDE
+Router(config)# zone security OUTSIDE
+
+Step 3: Assign Interfaces to Zones
+
+Router(config)# interface g0/0
+Router(config-if)# zone-member security INSIDE
+Router(config-if)# exit
+
+Router(config)# interface g0/1
+Router(config-if)# zone-member security OUTSIDE
+Router(config-if)# exit
+
+Step 4: Create Class Map
+
+Router(config)# class-map type inspect match-any CLASS1
+Router(config-cmap)# match protocol http
+Router(config-cmap)# match protocol https
+Router(config-cmap)# exit
+
+Step 5: Create Policy Map
+
+Router(config)# policy-map type inspect POLICY1
+Router(config-pmap)# class type inspect CLASS1
+Router(config-pmap-c)# inspect
+Router(config-pmap)# exit
+
+Step 6: Create Zone Pair
+
+Router(config)# zone-pair security ZP1 source INSIDE destination OUTSIDE
+Router(config-sec-zone-pair)# service-policy type inspect POLICY1
+
+Step 7: Verify Configuration
+
+Router# show zone security
+Router# show policy-map type inspect
+Router# show zone-pair security

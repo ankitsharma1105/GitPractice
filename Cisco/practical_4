@@ -1,0 +1,54 @@
+practical no . 4 configure ip acls to mitigate attacks and ipv6 acls
+
+Aim:
+(a) Verify connectivity among devices before firewall configuration.
+(b) Use ACLs to ensure remote access to the routers is available only from management station PC-C.
+(c) Configure ACLs to mitigate attacks.
+(d) Configuring IPv6 ACLs.
+
+Steps:
+Step 1: Verify Connectivity
+
+Open Cisco Packet Tracer and create the network topology.
+
+Configure IP address, subnet mask and default gateway on PCs.
+
+Configure IP addresses on router interfaces.
+
+Test connectivity using ping.
+
+Example:
+
+PC> ping 192.168.1.1
+
+Step 2: Configure Standard ACL (Allow only PC-C)
+
+Router> enable
+Router# configure terminal
+Router(config)# access-list 10 permit 192.168.3.10
+Router(config)# access-list 10 deny any
+Router(config)# line vty 0 4
+Router(config-line)# access-class 10 in
+Router(config-line)# exit
+
+Step 3: Configure Extended ACL to Mitigate Attacks
+
+Router(config)# access-list 100 deny tcp any any eq 23
+Router(config)# access-list 100 permit ip any any
+Router(config)# interface g0/0
+Router(config-if)# ip access-group 100 in
+Router(config-if)# exit
+
+Step 4: Configure IPv6 ACL
+
+Router(config)# ipv6 unicast-routing
+Router(config)# ipv6 access-list BLOCK_IPV6
+Router(config-ipv6-acl)# deny tcp any any eq 23
+Router(config-ipv6-acl)# permit ipv6 any any
+Router(config)# interface g0/0
+Router(config-if)# ipv6 traffic-filter BLOCK_IPV6 in
+
+Step 5: Verify
+
+Router# show access-lists
+Router# show ipv6 access-list

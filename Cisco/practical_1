@@ -1,1 +1,37 @@
-This is practical number number1 theory and steps
+Practical No. 1 : Configure Routers
+Aim 
+a) OSPF MD5 authentication.
+
+Steps:
+Step 1: Configure Router Interfaces
+
+Assign IP addresses to router interfaces.
+
+Enable interfaces.
+
+Router> enable
+Router# configure terminal
+Router(config)# interface g0/0
+Router(config-if)# ip address 192.168.1.1 255.255.255.0
+Router(config-if)# no shutdown
+Router(config-if)# exit
+
+Repeat for all interfaces between OSPF neighbors.
+
+Step 2: Configure OSPF with MD5 Authentication
+
+Router(config)# router ospf 1
+Router(config-router)# network 192.168.1.0 0.0.0.255 area 0
+Router(config-router)# exit
+
+Enable MD5 authentication on interface:
+
+Router(config)# interface g0/0
+Router(config-if)# ip ospf authentication message-digest
+Router(config-if)# ip ospf message-digest-key 1 md5 cisco123
+Router(config-if)# exit
+
+Step 3: Verify OSPF Neighbors
+
+Router# show ip ospf neighbor
+Router# show running-config

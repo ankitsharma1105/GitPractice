@@ -1,0 +1,40 @@
+Practical No. 6: Configure IOS Intrusion Prevention System (IPS) using CLI
+
+Aim
+
+Configure IOS Intrusion Prevention System (IPS) using CLI:
+(a) Enable IPS
+(b) Modify an IPS signature
+
+Steps
+
+Step 1: Verify Connectivity
+
+Configure IP addresses on PCs and router interfaces.
+
+Test connectivity using ping.
+
+PC> ping 192.168.1.1
+
+Step 2: Enable IPS on Router
+
+Router> enable
+Router# configure terminal
+Router(config)# ip ips notify SDEE
+Router(config)# ip ips name MY_IPS_LIST
+Router(config)# interface g0/0
+Router(config-if)# ip ips MY_IPS_LIST in
+
+Step 3: Modify IPS Signature
+
+Router(config)# ip ips signature-definition MY_SIG
+Router(config-ips)# signature 1001 action drop
+Router(config-ips)# exit
+Router(config)# interface g0/0
+Router(config-if)# ip ips MY_IPS_LIST in
+
+Step 4: Verify IPS
+
+Router# show ip ips config
+Router# show ip ips statistics
+Router# show running-config
