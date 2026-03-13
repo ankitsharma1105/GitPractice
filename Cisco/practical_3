@@ -1,0 +1,84 @@
+Steps:-
+Part 1: Set Up the Topology and Initialize Devices
+Step 1: Connect all routers, switches, and PCs according to the topology.
+Step 2: Power on all devices.
+Step 3: Erase old configurations (if required).
+Router> enable
+Router# erase startup-config
+Router# reload
+
+Part 2: Configure Devices and Verify Connectivity
+
+Step 1: Configure HTTP Server and Local Authentication (R1)
+R1> enable
+R1# configure terminal
+
+R1(config)# ip http server
+R1(config)# ip http authentication local
+
+R1(config)# username admin privilege 15 secret class
+
+Step 2: Configure SSH Access
+R1(config)# ip domain-name cisco.com
+
+R1(config)# crypto key generate rsa
+How many bits in the modulus [512]: 1024
+
+R1(config)# line vty 0 4
+R1(config-line)# login local
+R1(config-line)# transport input ssh
+R1(config-line)# exit
+
+
+Step 3: Configure OSPF Routing
+R1(config)# router ospf 1
+
+R1(config-router)# network 192.168.1.0 0.0.0.255 area 0
+R1(config-router)# network 10.1.1.0 0.0.0.3 area 0
+
+R1(config-router)# end
+
+Part 3: Configure and Verify Extended Numbered and Named ACLs
+
+Step 1: Configure Numbered Extended ACL (R1)
+R1(config)# access-list 100 remark Allow Web and SSH access
+
+R1(config)# access-list 100 permit tcp host 192.168.10.3 host 10.2.2.1 eq 22
+R1(config)# access-list 100 permit tcp any any eq 80
+
+R1(config)# interface s0/0/0
+R1(config-if)# ip access-group 100 out
+R1(config-if)# exit
+
+Step 2: Configure Named Extended ACL on R3
+R3(config)# ip access-list extended WEB-POLICY
+
+R3(config-ext-nacl)# permit tcp 192.168.30.0 0.0.0.255 host 10.1.1.1 eq 80
+R3(config-ext-nacl)# permit tcp 192.168.30.0 0.0.0.255 209.165.200.224 0.0.0.31 eq 80
+
+R3(config-ext-nacl)# exit
+
+R3(config)# interface s0/0/1
+R3(config-if)# ip access-group WEB-POLICY out
+R3(config-if)# end
+
+
+
+
+Part 4: Modify and Verify Extended ACLs
+
+Step 1: Modify Numbered ACL
+R1(config)# ip access-list extended 100
+R1(config-ext-nacl)# permit tcp 192.168.30.0 0.0.0.255 any
+R1(config-ext-nacl)# end
+
+Step 2: Modify Named ACL
+R3(config)# ip access-list extended WEB-POLICY
+R3(config-ext-nacl)# 30 permit tcp 192.168.30.0 0.0.0.255 any
+R3(config-ext-nacl)# end
+
+Step 3: Verify Configuration
+show ip access-lists
+show ip interface
+show ip route
+show ip ospf neighbor

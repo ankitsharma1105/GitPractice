@@ -1,0 +1,87 @@
+Task 1: Configure Local AAA Authentication for Console Access on R1
+
+Objective: Use the local database for console login authentication.
+
+Configuration Commands
+R1> enable
+R1# configure terminal
+
+R1(config)# username Admin1 secret admin1pa55
+R1(config)# aaa new-model
+R1(config)# aaa authentication login default local
+
+R1(config)# line console 0
+R1(config-line)# login authentication default
+R1(config-line)# exit
+
+R1(config)# end
+R1# exit
+Login Credentials
+Username: Admin1
+Password: admin1pa55
+Task 2: Configure Local AAA Authentication for VTY (Telnet) Lines on R1
+
+Objective: Use local database authentication for Telnet access.
+
+Configuration Commands
+R1# configure terminal
+
+R1(config)# aaa authentication login TELNET-LOGIN local
+
+R1(config)# line vty 0 4
+R1(config-line)# login authentication TELNET-LOGIN
+R1(config-line)# exit
+
+R1(config)# banner motd # *****AUTHORIZED ACCESS ONLY***** #
+
+R1(config)# end
+Task 3: Configure Server-Based AAA Authentication using TACACS+ on R2
+
+Objective: Authenticate users using a TACACS+ server.
+
+Configuration Commands
+R2> enable
+R2# configure terminal
+
+R2(config)# username Admin2 secret admin2pa55
+
+R2(config)# tacacs-server host 192.168.2.2
+R2(config)# tacacs-server key tacacspa55
+
+R2(config)# aaa new-model
+R2(config)# aaa authentication login default group tacacs+ local
+
+R2(config)# line console 0
+R2(config-line)# login authentication default
+R2(config-line)# exit
+
+R2(config)# end
+R2# exit
+Login Credentials
+Username: Admin2
+Password: admin2pa55
+Task 4: Configure Server-Based AAA Authentication using RADIUS on R3
+
+Objective: Authenticate users using a RADIUS server with local fallback.
+
+Configuration Commands
+R3> enable
+R3# configure terminal
+
+R3(config)# username Admin3 secret admin3pa55
+
+R3(config)# radius-server host 192.168.3.2
+R3(config)# radius-server key radiuspa55
+
+R3(config)# aaa new-model
+R3(config)# aaa authentication login default group radius local
+
+R3(config)# line console 0
+R3(config-line)# login authentication default
+R3(config-line)# exit
+
+R3(config)# end
+R3# exit
+Login Credentials
+Username: Admin3
+Password: admin3pa55
