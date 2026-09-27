@@ -1,6 +1,10 @@
 name: Java Lab Workflow
 
 on:
+  
+  push:
+  branches:
+    - master   # or specify any branch you want
   workflow_dispatch: # Allows manual trigger from GitHub UI
 
 jobs:
