@@ -1,6 +1,7 @@
 name: Java Lab Workflow
+
 on:
- workflow_dispatch: # Allows manual trigger from GitHub UI
+  workflow_dispatch: # Allows manual trigger from GitHub UI
 
 jobs:
   build-and-run:
